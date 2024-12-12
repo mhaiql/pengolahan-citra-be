@@ -3,9 +3,11 @@ import cv2
 import numpy as np
 import io
 import os
+from flask_cors import CORS
+
 
 app = Flask(__name__)
-
+CORS(app)
 # Konstanta untuk tipe MIME
 MIME_PNG = 'image/png'
 MIME_JPEG = 'image/jpeg'
