@@ -5,9 +5,10 @@ import io
 import os
 from flask_cors import CORS
 
-
 app = Flask(__name__)
+
 CORS(app)
+
 # Konstanta untuk tipe MIME
 MIME_PNG = 'image/png'
 MIME_JPEG = 'image/jpeg'
@@ -53,22 +54,30 @@ def blur_edges():
         img = read_image(file)
         
         h, w = img.shape[:2]
-        mask = np.zeros((h, w), dtype=np.uint8)
-        center = (w // 2, h // 2)
-        radius = min(w, h) // 1.5
-        cv2.circle(mask, center, int(radius), (255), thickness=-1)
         
+        edge_thickness_h = int(h * 0.25)
+        edge_thickness_w = int(w * 0.25) 
+        
+        # Create a mask for the edges
+        mask = np.zeros((h, w), dtype=np.uint8)
+        
+        # Define the area to keep sharp (the center of the image)
+        mask[edge_thickness_h:h-edge_thickness_h, edge_thickness_w:w-edge_thickness_w] = 255
+        
+        # Apply Gaussian blur to the entire image
         blurred_img = cv2.GaussianBlur(img, (61, 61), 0)
+        
+        # Combine the original image and the blurred image using the mask
         result = np.where(mask[:, :, np.newaxis] == 255, img, blurred_img)
         
-        # Dapatkan ekstensi file untuk menentukan format output
+        # Get the file extension to determine output format
         ext = os.path.splitext(file.filename)[1].lower()
-        format = 'png' if ext == '.png' else 'jpg'  # Default ke jpg jika bukan png
+        format = 'png' if ext == '.png' else 'jpg'  # Default to jpg if not png
         
-        # Konversi gambar ke buffer sesuai format
+        # Convert the image to buffer according to format
         io_buf = convert_image_to_buffer(result, format=format)
         
-        return send_file(io_buf, mimetype=MIME_PNG if format == 'png' else MIME_JPEG, as_attachment=True, download_name='output_blur_edges' + ext)
+        return send_file(io_buf, mimetype='image/png' if format == 'png' else 'image/jpeg', as_attachment=True, download_name='output_blur_edges' + ext)
     except ValueError as e:
         return {"error": str(e)}, 400
 
