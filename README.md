@@ -8,10 +8,8 @@
 2. Open Terminal / CMD, type 'python --version' or 'python3 --version'. If does not exist, reinstall again (go watch tutorial on youtube).
 3. Once python is installed, and verified by checking it's version, open the code on vscode or any other code editor app.
 4. Inside the code editor, open terminal.
-5. Run 'pip install flask' / 'pip3 install flask'
-6. Run 'pip install opencv-python' / 'pip3 install opencv-python'
-7. Run 'pip install numpy' / 'pip3 install numpy'
-8. Run 'python citra_services.py' / 'python3 citra_services.py' to run the code.
+5. Run 'pip install -r requirements.txt'
+6. Run 'python citra_services.py' / 'python3 citra_services.py' to run the code.
 
 ## Add your files
 
